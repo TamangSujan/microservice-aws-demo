@@ -1,0 +1,861 @@
+{
+  "Resources": {
+    "MyVpcF9F0CA6F": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": "10.0.0.0/16",
+        "EnableDnsHostnames": true,
+        "EnableDnsSupport": true,
+        "InstanceTenancy": "default",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "LocalStack/MyVpc"
+          }
+        ]
+      }
+    },
+    "MyVpcPublicSubnet1SubnetF6608456": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.0.0/18",
+        "VpcId": {
+          "Ref": "MyVpcF9F0CA6F"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            0,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": true,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public"
+          },
+          {
+            "Key": "Name",
+            "Value": "LocalStack/MyVpc/PublicSubnet1"
+          }
+        ]
+      }
+    },
+    "MyVpcPublicSubnet1RouteTableC46AB2F4": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "MyVpcF9F0CA6F"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "LocalStack/MyVpc/PublicSubnet1"
+          }
+        ]
+      }
+    },
+    "MyVpcPublicSubnet1RouteTableAssociation2ECEE1CB": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "MyVpcPublicSubnet1RouteTableC46AB2F4"
+        },
+        "SubnetId": {
+          "Ref": "MyVpcPublicSubnet1SubnetF6608456"
+        }
+      }
+    },
+    "MyVpcPublicSubnet1DefaultRoute95FDF9EB": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "MyVpcPublicSubnet1RouteTableC46AB2F4"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "MyVpcIGW5C4A4F63"
+        }
+      },
+      "DependsOn": [
+        "MyVpcVPCGW488ACE0D"
+      ]
+    },
+    "MyVpcPublicSubnet1EIP096967CB": {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "Domain": "vpc",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "LocalStack/MyVpc/PublicSubnet1"
+          }
+        ]
+      }
+    },
+    "MyVpcPublicSubnet1NATGatewayAD3400C1": {
+      "Type": "AWS::EC2::NatGateway",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "MyVpcPublicSubnet1SubnetF6608456"
+        },
+        "AllocationId": {
+          "Fn::GetAtt": [
+            "MyVpcPublicSubnet1EIP096967CB",
+            "AllocationId"
+          ]
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "LocalStack/MyVpc/PublicSubnet1"
+          }
+        ]
+      }
+    },
+    "MyVpcPublicSubnet2Subnet492B6BFB": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.64.0/18",
+        "VpcId": {
+          "Ref": "MyVpcF9F0CA6F"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            1,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": true,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public"
+          },
+          {
+            "Key": "Name",
+            "Value": "LocalStack/MyVpc/PublicSubnet2"
+          }
+        ]
+      }
+    },
+    "MyVpcPublicSubnet2RouteTable1DF17386": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "MyVpcF9F0CA6F"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "LocalStack/MyVpc/PublicSubnet2"
+          }
+        ]
+      }
+    },
+    "MyVpcPublicSubnet2RouteTableAssociation227DE78D": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "MyVpcPublicSubnet2RouteTable1DF17386"
+        },
+        "SubnetId": {
+          "Ref": "MyVpcPublicSubnet2Subnet492B6BFB"
+        }
+      }
+    },
+    "MyVpcPublicSubnet2DefaultRoute052936F6": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "MyVpcPublicSubnet2RouteTable1DF17386"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "MyVpcIGW5C4A4F63"
+        }
+      },
+      "DependsOn": [
+        "MyVpcVPCGW488ACE0D"
+      ]
+    },
+    "MyVpcPublicSubnet2EIP8CCBA239": {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "Domain": "vpc",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "LocalStack/MyVpc/PublicSubnet2"
+          }
+        ]
+      }
+    },
+    "MyVpcPublicSubnet2NATGateway91BFBEC9": {
+      "Type": "AWS::EC2::NatGateway",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "MyVpcPublicSubnet2Subnet492B6BFB"
+        },
+        "AllocationId": {
+          "Fn::GetAtt": [
+            "MyVpcPublicSubnet2EIP8CCBA239",
+            "AllocationId"
+          ]
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "LocalStack/MyVpc/PublicSubnet2"
+          }
+        ]
+      }
+    },
+    "MyVpcPrivateSubnet1Subnet5057CF7E": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.128.0/18",
+        "VpcId": {
+          "Ref": "MyVpcF9F0CA6F"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            0,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Private"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private"
+          },
+          {
+            "Key": "Name",
+            "Value": "LocalStack/MyVpc/PrivateSubnet1"
+          }
+        ]
+      }
+    },
+    "MyVpcPrivateSubnet1RouteTable8819E6E2": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "MyVpcF9F0CA6F"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "LocalStack/MyVpc/PrivateSubnet1"
+          }
+        ]
+      }
+    },
+    "MyVpcPrivateSubnet1RouteTableAssociation56D38C7E": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "MyVpcPrivateSubnet1RouteTable8819E6E2"
+        },
+        "SubnetId": {
+          "Ref": "MyVpcPrivateSubnet1Subnet5057CF7E"
+        }
+      }
+    },
+    "MyVpcPrivateSubnet1DefaultRouteA8CDE2FA": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "MyVpcPrivateSubnet1RouteTable8819E6E2"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": {
+          "Ref": "MyVpcPublicSubnet1NATGatewayAD3400C1"
+        }
+      }
+    },
+    "MyVpcPrivateSubnet2Subnet0040C983": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.192.0/18",
+        "VpcId": {
+          "Ref": "MyVpcF9F0CA6F"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            1,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Private"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private"
+          },
+          {
+            "Key": "Name",
+            "Value": "LocalStack/MyVpc/PrivateSubnet2"
+          }
+        ]
+      }
+    },
+    "MyVpcPrivateSubnet2RouteTableCEDCEECE": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "MyVpcF9F0CA6F"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "LocalStack/MyVpc/PrivateSubnet2"
+          }
+        ]
+      }
+    },
+    "MyVpcPrivateSubnet2RouteTableAssociation86A610DA": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "MyVpcPrivateSubnet2RouteTableCEDCEECE"
+        },
+        "SubnetId": {
+          "Ref": "MyVpcPrivateSubnet2Subnet0040C983"
+        }
+      }
+    },
+    "MyVpcPrivateSubnet2DefaultRoute9CE96294": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "MyVpcPrivateSubnet2RouteTableCEDCEECE"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": {
+          "Ref": "MyVpcPublicSubnet2NATGateway91BFBEC9"
+        }
+      }
+    },
+    "MyVpcIGW5C4A4F63": {
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "LocalStack/MyVpc"
+          }
+        ]
+      }
+    },
+    "MyVpcVPCGW488ACE0D": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": {
+          "Ref": "MyVpcF9F0CA6F"
+        },
+        "InternetGatewayId": {
+          "Ref": "MyVpcIGW5C4A4F63"
+        }
+      }
+    },
+    "postgresSubnetGroup6B65B032": {
+      "Type": "AWS::RDS::DBSubnetGroup",
+      "Properties": {
+        "DBSubnetGroupDescription": "Subnet group for postgres database",
+        "SubnetIds": [
+          {
+            "Ref": "MyVpcPrivateSubnet1Subnet5057CF7E"
+          },
+          {
+            "Ref": "MyVpcPrivateSubnet2Subnet0040C983"
+          }
+        ]
+      }
+    },
+    "postgresSecurityGroup1C7456F9": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Security group for postgres database",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1"
+          }
+        ],
+        "VpcId": {
+          "Ref": "MyVpcF9F0CA6F"
+        }
+      }
+    },
+    "LocalStackpostgresSecret28836B863fdaad7efa858a3daf9490cf0a702aeb": {
+      "Type": "AWS::SecretsManager::Secret",
+      "Properties": {
+        "Description": {
+          "Fn::Join": [
+            "",
+            [
+              "Generated by the CDK for stack: ",
+              {
+                "Ref": "AWS::StackName"
+              }
+            ]
+          ]
+        },
+        "GenerateSecretString": {
+          "ExcludeCharacters": " %+~`#$&*()|[]{}:;<>?!'/@\"\\",
+          "GenerateStringKey": "password",
+          "PasswordLength": 30,
+          "SecretStringTemplate": "{\"username\":\"admin\"}"
+        }
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete"
+    },
+    "postgresSecretAttachmentE987A31D": {
+      "Type": "AWS::SecretsManager::SecretTargetAttachment",
+      "Properties": {
+        "SecretId": {
+          "Ref": "LocalStackpostgresSecret28836B863fdaad7efa858a3daf9490cf0a702aeb"
+        },
+        "TargetId": {
+          "Ref": "postgres6BBC2FA4"
+        },
+        "TargetType": "AWS::RDS::DBInstance"
+      }
+    },
+    "postgres6BBC2FA4": {
+      "Type": "AWS::RDS::DBInstance",
+      "Properties": {
+        "DBInstanceClass": "db.t2.micro",
+        "AllocatedStorage": "20",
+        "CopyTagsToSnapshot": true,
+        "DBName": "Postgres",
+        "DBSubnetGroupName": {
+          "Ref": "postgresSubnetGroup6B65B032"
+        },
+        "Engine": "postgres",
+        "EngineVersion": "14.1",
+        "MasterUsername": "admin",
+        "MasterUserPassword": {
+          "Fn::Join": [
+            "",
+            [
+              "{{resolve:secretsmanager:",
+              {
+                "Ref": "LocalStackpostgresSecret28836B863fdaad7efa858a3daf9490cf0a702aeb"
+              },
+              ":SecretString:password::}}"
+            ]
+          ]
+        },
+        "StorageType": "gp2",
+        "VPCSecurityGroups": [
+          {
+            "Fn::GetAtt": [
+              "postgresSecurityGroup1C7456F9",
+              "GroupId"
+            ]
+          }
+        ]
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete"
+    },
+    "MyCluster4C1BA579": {
+      "Type": "AWS::ECS::Cluster"
+    },
+    "ServiceAFargateTaskTaskRole53C10149": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ecs-tasks.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      }
+    },
+    "ServiceAFargateTaskCBCE6D8C": {
+      "Type": "AWS::ECS::TaskDefinition",
+      "Properties": {
+        "ContainerDefinitions": [
+          {
+            "Environment": [
+              {
+                "Name": "SPRING_DATASOURCE_DRIVER_CLASS_NAME",
+                "Value": "org.postgresql.Driver"
+              },
+              {
+                "Name": "SPRING_DATASOURCE_URL",
+                "Value": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "jdbc:postgresql://",
+                      {
+                        "Fn::GetAtt": [
+                          "postgres6BBC2FA4",
+                          "Endpoint.Address"
+                        ]
+                      },
+                      ":",
+                      {
+                        "Fn::GetAtt": [
+                          "postgres6BBC2FA4",
+                          "Endpoint.Port"
+                        ]
+                      },
+                      "/Postgres"
+                    ]
+                  ]
+                }
+              },
+              {
+                "Name": "SPRING_DATASOURCE_PASSWORD",
+                "Value": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "{{resolve:secretsmanager:",
+                      {
+                        "Ref": "postgresSecretAttachmentE987A31D"
+                      },
+                      ":SecretString:password::}}"
+                    ]
+                  ]
+                }
+              },
+              {
+                "Name": "SPRING_JPA_HIBERNATE_DDL_AUTO",
+                "Value": "update"
+              },
+              {
+                "Name": "SPRING_DATASOURCE_USERNAME",
+                "Value": "admin"
+              },
+              {
+                "Name": "SPRING_SQL_MODE_INIT",
+                "Value": "always"
+              }
+            ],
+            "Essential": true,
+            "Image": "service-a",
+            "Name": "ServiceAFargateContainer",
+            "PortMappings": [
+              {
+                "ContainerPort": 8000,
+                "HostPort": 8000,
+                "Protocol": "tcp"
+              }
+            ]
+          }
+        ],
+        "Cpu": "256",
+        "Family": "LocalStackServiceAFargateTask5A07EED6",
+        "Memory": "512",
+        "NetworkMode": "awsvpc",
+        "RequiresCompatibilities": [
+          "FARGATE"
+        ],
+        "TaskRoleArn": {
+          "Fn::GetAtt": [
+            "ServiceAFargateTaskTaskRole53C10149",
+            "Arn"
+          ]
+        }
+      }
+    },
+    "ServiceAService01F8F99F": {
+      "Type": "AWS::ECS::Service",
+      "Properties": {
+        "Cluster": {
+          "Ref": "MyCluster4C1BA579"
+        },
+        "DeploymentConfiguration": {
+          "MaximumPercent": 200,
+          "MinimumHealthyPercent": 50
+        },
+        "EnableECSManagedTags": false,
+        "LaunchType": "FARGATE",
+        "NetworkConfiguration": {
+          "AwsvpcConfiguration": {
+            "AssignPublicIp": "DISABLED",
+            "SecurityGroups": [
+              {
+                "Fn::GetAtt": [
+                  "ServiceASecurityGroupD04CBF55",
+                  "GroupId"
+                ]
+              }
+            ],
+            "Subnets": [
+              {
+                "Ref": "MyVpcPrivateSubnet1Subnet5057CF7E"
+              },
+              {
+                "Ref": "MyVpcPrivateSubnet2Subnet0040C983"
+              }
+            ]
+          }
+        },
+        "TaskDefinition": {
+          "Ref": "ServiceAFargateTaskCBCE6D8C"
+        }
+      }
+    },
+    "ServiceASecurityGroupD04CBF55": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "LocalStack/ServiceA/SecurityGroup",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1"
+          }
+        ],
+        "VpcId": {
+          "Ref": "MyVpcF9F0CA6F"
+        }
+      }
+    },
+    "ServiceBFargateTaskTaskRole4E4B64B7": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ecs-tasks.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      }
+    },
+    "ServiceBFargateTaskB4062D38": {
+      "Type": "AWS::ECS::TaskDefinition",
+      "Properties": {
+        "ContainerDefinitions": [
+          {
+            "Essential": true,
+            "Image": "service-b",
+            "Name": "ServiceBFargateContainer",
+            "PortMappings": [
+              {
+                "ContainerPort": 8001,
+                "HostPort": 8001,
+                "Protocol": "tcp"
+              }
+            ]
+          }
+        ],
+        "Cpu": "256",
+        "Family": "LocalStackServiceBFargateTaskC7FDCF0E",
+        "Memory": "512",
+        "NetworkMode": "awsvpc",
+        "RequiresCompatibilities": [
+          "FARGATE"
+        ],
+        "TaskRoleArn": {
+          "Fn::GetAtt": [
+            "ServiceBFargateTaskTaskRole4E4B64B7",
+            "Arn"
+          ]
+        }
+      }
+    },
+    "ServiceBServiceB9EEC07B": {
+      "Type": "AWS::ECS::Service",
+      "Properties": {
+        "Cluster": {
+          "Ref": "MyCluster4C1BA579"
+        },
+        "DeploymentConfiguration": {
+          "MaximumPercent": 200,
+          "MinimumHealthyPercent": 50
+        },
+        "EnableECSManagedTags": false,
+        "LaunchType": "FARGATE",
+        "NetworkConfiguration": {
+          "AwsvpcConfiguration": {
+            "AssignPublicIp": "DISABLED",
+            "SecurityGroups": [
+              {
+                "Fn::GetAtt": [
+                  "ServiceBSecurityGroupB900CA79",
+                  "GroupId"
+                ]
+              }
+            ],
+            "Subnets": [
+              {
+                "Ref": "MyVpcPrivateSubnet1Subnet5057CF7E"
+              },
+              {
+                "Ref": "MyVpcPrivateSubnet2Subnet0040C983"
+              }
+            ]
+          }
+        },
+        "TaskDefinition": {
+          "Ref": "ServiceBFargateTaskB4062D38"
+        }
+      }
+    },
+    "ServiceBSecurityGroupB900CA79": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "LocalStack/ServiceB/SecurityGroup",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1"
+          }
+        ],
+        "VpcId": {
+          "Ref": "MyVpcF9F0CA6F"
+        }
+      }
+    },
+    "LoadBalancerFargateTaskTaskRole54C84294": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ecs-tasks.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      }
+    },
+    "LoadBalancerFargateTaskBA3698B4": {
+      "Type": "AWS::ECS::TaskDefinition",
+      "Properties": {
+        "ContainerDefinitions": [
+          {
+            "Essential": true,
+            "Image": "api-gateway",
+            "Name": "LoadBalancerFargateContainer",
+            "PortMappings": [
+              {
+                "ContainerPort": 9000,
+                "HostPort": 9000,
+                "Protocol": "tcp"
+              }
+            ]
+          }
+        ],
+        "Cpu": "256",
+        "Family": "LocalStackLoadBalancerFargateTask9C4E67C9",
+        "Memory": "512",
+        "NetworkMode": "awsvpc",
+        "RequiresCompatibilities": [
+          "FARGATE"
+        ],
+        "TaskRoleArn": {
+          "Fn::GetAtt": [
+            "LoadBalancerFargateTaskTaskRole54C84294",
+            "Arn"
+          ]
+        }
+      }
+    },
+    "LoadBalancerServiceC327B0ED": {
+      "Type": "AWS::ECS::Service",
+      "Properties": {
+        "Cluster": {
+          "Ref": "MyCluster4C1BA579"
+        },
+        "DeploymentConfiguration": {
+          "MaximumPercent": 200,
+          "MinimumHealthyPercent": 50
+        },
+        "EnableECSManagedTags": false,
+        "LaunchType": "FARGATE",
+        "NetworkConfiguration": {
+          "AwsvpcConfiguration": {
+            "AssignPublicIp": "ENABLED",
+            "SecurityGroups": [
+              {
+                "Fn::GetAtt": [
+                  "LoadBalancerSecurityGroupA28D6DD7",
+                  "GroupId"
+                ]
+              }
+            ],
+            "Subnets": [
+              {
+                "Ref": "MyVpcPublicSubnet1SubnetF6608456"
+              },
+              {
+                "Ref": "MyVpcPublicSubnet2Subnet492B6BFB"
+              }
+            ]
+          }
+        },
+        "TaskDefinition": {
+          "Ref": "LoadBalancerFargateTaskBA3698B4"
+        }
+      }
+    },
+    "LoadBalancerSecurityGroupA28D6DD7": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "LocalStack/LoadBalancer/SecurityGroup",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1"
+          }
+        ],
+        "VpcId": {
+          "Ref": "MyVpcF9F0CA6F"
+        }
+      }
+    }
+  }
+}

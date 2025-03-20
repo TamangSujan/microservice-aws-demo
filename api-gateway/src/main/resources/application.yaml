@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: service-a
+          uri: http://host.docker.internal:8000
+          predicates:
+            - Path=/api/service/a/**
+          filters:
+            - StripPrefix=3
+        - id: service-b
+          uri: http://host.docker.internal:8001
+          predicates:
+            - Path=/api/service/b/**
+          filters:
+            - StripPrefix=3
+
+server:
+  port: 9000
