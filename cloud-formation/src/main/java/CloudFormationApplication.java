@@ -7,6 +7,7 @@ import database.PostgresProperties;
 import environment.EnvironmentVariables;
 import loadbalancer.LoadBalancer;
 import loadbalancer.LoadBalancerProperties;
+import notification.NotificationProperties;
 import stack.LocalStack;
 import vpc.VirtualPrivateCloud;
 
@@ -21,7 +22,20 @@ public class CloudFormationApplication {
         LocalContainer serviceA = new LocalContainer(cluster, serviceAProperties(), serviceAEnvironment(postgres));
         LocalContainer serviceB = new LocalContainer(cluster, serviceBProperties());
         LoadBalancer loadBalancer = new LoadBalancer(cluster, loadBalancerProperties());
+        LocalContainer emailService = new LocalContainer(cluster, emailProperties(),
+                emailPropertiesEnvironment());
         stack.generateTemplate();
+    }
+
+    private static ContainerProperties emailProperties(){
+        return new ContainerProperties("MyEmailServer", "email-service", List.of(4000));
+    }
+
+    private static EnvironmentVariables emailPropertiesEnvironment(){
+        EnvironmentVariables environmentVariables = new EnvironmentVariables();
+        environmentVariables.add("SES_PRIMARY_SENDER_MAIL", "moktansujanj5@gmail.com");
+        environmentVariables.add("SES_URL", "http://host.docker.internal:4566");
+        return environmentVariables;
     }
 
     private static DatabaseProperties postgresProperties(){

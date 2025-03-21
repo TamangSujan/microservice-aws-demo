@@ -1477,6 +1477,199 @@
               "fqn": "aws-cdk-lib.aws_ecs.FargateService",
               "version": "2.14.0"
             }
+          },
+          "MyEmailServerFargateTask": {
+            "id": "MyEmailServerFargateTask",
+            "path": "LocalStack/MyEmailServerFargateTask",
+            "children": {
+              "TaskRole": {
+                "id": "TaskRole",
+                "path": "LocalStack/MyEmailServerFargateTask/TaskRole",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "LocalStack/MyEmailServerFargateTask/TaskRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "ecs-tasks.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.14.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.14.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "LocalStack/MyEmailServerFargateTask/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ECS::TaskDefinition",
+                  "aws:cdk:cloudformation:props": {
+                    "containerDefinitions": [
+                      {
+                        "essential": true,
+                        "image": "email-service",
+                        "name": "MyEmailServerFargateContainer",
+                        "portMappings": [
+                          {
+                            "containerPort": 4000,
+                            "hostPort": 4000,
+                            "protocol": "tcp"
+                          }
+                        ],
+                        "environment": [
+                          {
+                            "name": "SES_URL",
+                            "value": "http://host.docker.internal:4566"
+                          },
+                          {
+                            "name": "SES_PRIMARY_SENDER_MAIL",
+                            "value": "moktansujanj5@gmail.com"
+                          }
+                        ]
+                      }
+                    ],
+                    "cpu": "256",
+                    "family": "LocalStackMyEmailServerFargateTaskEED6E33D",
+                    "memory": "512",
+                    "networkMode": "awsvpc",
+                    "requiresCompatibilities": [
+                      "FARGATE"
+                    ],
+                    "taskRoleArn": {
+                      "Fn::GetAtt": [
+                        "MyEmailServerFargateTaskTaskRoleF2477125",
+                        "Arn"
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.CfnTaskDefinition",
+                  "version": "2.14.0"
+                }
+              },
+              "MyEmailServerFargateContainer": {
+                "id": "MyEmailServerFargateContainer",
+                "path": "LocalStack/MyEmailServerFargateTask/MyEmailServerFargateContainer",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.ContainerDefinition",
+                  "version": "2.14.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ecs.FargateTaskDefinition",
+              "version": "2.14.0"
+            }
+          },
+          "MyEmailServer": {
+            "id": "MyEmailServer",
+            "path": "LocalStack/MyEmailServer",
+            "children": {
+              "Service": {
+                "id": "Service",
+                "path": "LocalStack/MyEmailServer/Service",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ECS::Service",
+                  "aws:cdk:cloudformation:props": {
+                    "cluster": {
+                      "Ref": "MyCluster4C1BA579"
+                    },
+                    "deploymentConfiguration": {
+                      "maximumPercent": 200,
+                      "minimumHealthyPercent": 50
+                    },
+                    "enableEcsManagedTags": false,
+                    "launchType": "FARGATE",
+                    "networkConfiguration": {
+                      "awsvpcConfiguration": {
+                        "assignPublicIp": "DISABLED",
+                        "subnets": [
+                          {
+                            "Ref": "MyVpcPrivateSubnet1Subnet5057CF7E"
+                          },
+                          {
+                            "Ref": "MyVpcPrivateSubnet2Subnet0040C983"
+                          }
+                        ],
+                        "securityGroups": [
+                          {
+                            "Fn::GetAtt": [
+                              "MyEmailServerSecurityGroup07941138",
+                              "GroupId"
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "taskDefinition": {
+                      "Ref": "MyEmailServerFargateTask7F552188"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.CfnService",
+                  "version": "2.14.0"
+                }
+              },
+              "SecurityGroup": {
+                "id": "SecurityGroup",
+                "path": "LocalStack/MyEmailServer/SecurityGroup",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "LocalStack/MyEmailServer/SecurityGroup/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                      "aws:cdk:cloudformation:props": {
+                        "groupDescription": "LocalStack/MyEmailServer/SecurityGroup",
+                        "securityGroupEgress": [
+                          {
+                            "cidrIp": "0.0.0.0/0",
+                            "description": "Allow all outbound traffic by default",
+                            "ipProtocol": "-1"
+                          }
+                        ],
+                        "vpcId": {
+                          "Ref": "MyVpcF9F0CA6F"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroup",
+                      "version": "2.14.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.SecurityGroup",
+                  "version": "2.14.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ecs.FargateService",
+              "version": "2.14.0"
+            }
           }
         },
         "constructInfo": {

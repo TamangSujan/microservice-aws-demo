@@ -262,6 +262,30 @@
             "type": "aws:cdk:logicalId",
             "data": "LoadBalancerSecurityGroupA28D6DD7"
           }
+        ],
+        "/LocalStack/MyEmailServerFargateTask/TaskRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyEmailServerFargateTaskTaskRoleF2477125"
+          }
+        ],
+        "/LocalStack/MyEmailServerFargateTask/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyEmailServerFargateTask7F552188"
+          }
+        ],
+        "/LocalStack/MyEmailServer/Service": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyEmailServerServiceABB88765"
+          }
+        ],
+        "/LocalStack/MyEmailServer/SecurityGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyEmailServerSecurityGroup07941138"
+          }
         ]
       },
       "displayName": "LocalStack"

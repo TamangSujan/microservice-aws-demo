@@ -10,12 +10,14 @@
         <module name="cloud-formation" />
         <module name="service-a" />
         <module name="service-b" />
+        <module name="email-service" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="api-gateway" options="-parameters" />
+      <module name="email-service" options="-parameters" />
       <module name="service-a" options="-parameters" />
       <module name="service-b" options="-parameters" />
     </option>

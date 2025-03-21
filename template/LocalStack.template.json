@@ -856,6 +856,119 @@
           "Ref": "MyVpcF9F0CA6F"
         }
       }
+    },
+    "MyEmailServerFargateTaskTaskRoleF2477125": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ecs-tasks.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      }
+    },
+    "MyEmailServerFargateTask7F552188": {
+      "Type": "AWS::ECS::TaskDefinition",
+      "Properties": {
+        "ContainerDefinitions": [
+          {
+            "Environment": [
+              {
+                "Name": "SES_URL",
+                "Value": "http://host.docker.internal:4566"
+              },
+              {
+                "Name": "SES_PRIMARY_SENDER_MAIL",
+                "Value": "moktansujanj5@gmail.com"
+              }
+            ],
+            "Essential": true,
+            "Image": "email-service",
+            "Name": "MyEmailServerFargateContainer",
+            "PortMappings": [
+              {
+                "ContainerPort": 4000,
+                "HostPort": 4000,
+                "Protocol": "tcp"
+              }
+            ]
+          }
+        ],
+        "Cpu": "256",
+        "Family": "LocalStackMyEmailServerFargateTaskEED6E33D",
+        "Memory": "512",
+        "NetworkMode": "awsvpc",
+        "RequiresCompatibilities": [
+          "FARGATE"
+        ],
+        "TaskRoleArn": {
+          "Fn::GetAtt": [
+            "MyEmailServerFargateTaskTaskRoleF2477125",
+            "Arn"
+          ]
+        }
+      }
+    },
+    "MyEmailServerServiceABB88765": {
+      "Type": "AWS::ECS::Service",
+      "Properties": {
+        "Cluster": {
+          "Ref": "MyCluster4C1BA579"
+        },
+        "DeploymentConfiguration": {
+          "MaximumPercent": 200,
+          "MinimumHealthyPercent": 50
+        },
+        "EnableECSManagedTags": false,
+        "LaunchType": "FARGATE",
+        "NetworkConfiguration": {
+          "AwsvpcConfiguration": {
+            "AssignPublicIp": "DISABLED",
+            "SecurityGroups": [
+              {
+                "Fn::GetAtt": [
+                  "MyEmailServerSecurityGroup07941138",
+                  "GroupId"
+                ]
+              }
+            ],
+            "Subnets": [
+              {
+                "Ref": "MyVpcPrivateSubnet1Subnet5057CF7E"
+              },
+              {
+                "Ref": "MyVpcPrivateSubnet2Subnet0040C983"
+              }
+            ]
+          }
+        },
+        "TaskDefinition": {
+          "Ref": "MyEmailServerFargateTask7F552188"
+        }
+      }
+    },
+    "MyEmailServerSecurityGroup07941138": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "LocalStack/MyEmailServer/SecurityGroup",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1"
+          }
+        ],
+        "VpcId": {
+          "Ref": "MyVpcF9F0CA6F"
+        }
+      }
     }
   }
 }

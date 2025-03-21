@@ -21,5 +21,13 @@ if %ERRORLEVEL% neq 0 (
     exit /b %ERRORLEVEL%
 )
 
+aws --endpoint-url=http://localhost:4566 elbv2 describe-load-balancers ^
+    --query "LoadBalancers[0].DNSName" --output text
+
+if %ERRORLEVEL% neq 0 (
+    echo Error: Failed to retrieve Load Balancer DNS.
+    exit /b %ERRORLEVEL%
+)
+
 echo Script executed successfully.
 exit /b 0

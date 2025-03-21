@@ -16,6 +16,12 @@ spring:
             - Path=/api/service/b/**
           filters:
             - StripPrefix=3
+        - id: service-b
+          uri: http://host.docker.internal:4000
+          predicates:
+            - Path=/api/service/email/**
+          filters:
+            - StripPrefix=3
 
 server:
   port: 9000

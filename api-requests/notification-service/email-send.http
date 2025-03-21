@@ -1,0 +1,10 @@
+### Email Send
+
+POST http://localhost:9000/api/service/email/notification/email/send
+Content-Type: application/json
+
+{
+  "destination": "tamangsujanj5@gmail.com"
+}
+
+###
