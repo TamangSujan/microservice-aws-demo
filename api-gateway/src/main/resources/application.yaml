@@ -16,10 +16,16 @@ spring:
             - Path=/api/service/b/**
           filters:
             - StripPrefix=3
-        - id: service-b
+        - id: email-service
           uri: http://host.docker.internal:4000
           predicates:
             - Path=/api/service/email/**
+          filters:
+            - StripPrefix=3
+        - id: store-service
+          uri: http://host.docker.internal:5000
+          predicates:
+            - Path=/api/service/store/**
           filters:
             - StripPrefix=3
 

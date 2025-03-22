@@ -286,6 +286,36 @@
             "type": "aws:cdk:logicalId",
             "data": "MyEmailServerSecurityGroup07941138"
           }
+        ],
+        "/LocalStack/MyBucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyBucketF68F3FF0"
+          }
+        ],
+        "/LocalStack/MyS3BucketServiceFargateTask/TaskRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyS3BucketServiceFargateTaskTaskRole92BF9678"
+          }
+        ],
+        "/LocalStack/MyS3BucketServiceFargateTask/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyS3BucketServiceFargateTask91F77164"
+          }
+        ],
+        "/LocalStack/MyS3BucketService/Service": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyS3BucketService384FC205"
+          }
+        ],
+        "/LocalStack/MyS3BucketService/SecurityGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyS3BucketServiceSecurityGroup0B32EECE"
+          }
         ]
       },
       "displayName": "LocalStack"

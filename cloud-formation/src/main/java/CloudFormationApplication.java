@@ -7,7 +7,8 @@ import database.PostgresProperties;
 import environment.EnvironmentVariables;
 import loadbalancer.LoadBalancer;
 import loadbalancer.LoadBalancerProperties;
-import notification.NotificationProperties;
+import s3.S3Bucket;
+import s3.S3BucketProperties;
 import stack.LocalStack;
 import vpc.VirtualPrivateCloud;
 
@@ -24,7 +25,20 @@ public class CloudFormationApplication {
         LoadBalancer loadBalancer = new LoadBalancer(cluster, loadBalancerProperties());
         LocalContainer emailService = new LocalContainer(cluster, emailProperties(),
                 emailPropertiesEnvironment());
+        S3Bucket bucket = new S3Bucket(stack.getStack(), new S3BucketProperties("MyBucket", "my-bucket"));
+        LocalContainer storeService = new LocalContainer(cluster, storeServiceProperties(), storeServiceEnvironment());
         stack.generateTemplate();
+    }
+
+    private static ContainerProperties storeServiceProperties(){
+        return new ContainerProperties("MyS3BucketService", "store-service", List.of(5000));
+    }
+
+    private static EnvironmentVariables storeServiceEnvironment(){
+        EnvironmentVariables variables = new EnvironmentVariables();
+        variables.add("S3_URL", "http://s3.localhost.localstack.cloud:4566");
+        variables.add("BUCKET_NAME", "my-bucket");
+        return variables;
     }
 
     private static ContainerProperties emailProperties(){

@@ -1670,6 +1670,223 @@
               "fqn": "aws-cdk-lib.aws_ecs.FargateService",
               "version": "2.14.0"
             }
+          },
+          "MyBucket": {
+            "id": "MyBucket",
+            "path": "LocalStack/MyBucket",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "LocalStack/MyBucket/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::S3::Bucket",
+                  "aws:cdk:cloudformation:props": {
+                    "bucketName": "my-bucket"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3.CfnBucket",
+                  "version": "2.14.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_s3.Bucket",
+              "version": "2.14.0"
+            }
+          },
+          "MyS3BucketServiceFargateTask": {
+            "id": "MyS3BucketServiceFargateTask",
+            "path": "LocalStack/MyS3BucketServiceFargateTask",
+            "children": {
+              "TaskRole": {
+                "id": "TaskRole",
+                "path": "LocalStack/MyS3BucketServiceFargateTask/TaskRole",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "LocalStack/MyS3BucketServiceFargateTask/TaskRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "ecs-tasks.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.14.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.14.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "LocalStack/MyS3BucketServiceFargateTask/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ECS::TaskDefinition",
+                  "aws:cdk:cloudformation:props": {
+                    "containerDefinitions": [
+                      {
+                        "essential": true,
+                        "image": "store-service",
+                        "name": "MyS3BucketServiceFargateContainer",
+                        "portMappings": [
+                          {
+                            "containerPort": 5000,
+                            "hostPort": 5000,
+                            "protocol": "tcp"
+                          }
+                        ],
+                        "environment": [
+                          {
+                            "name": "S3_URL",
+                            "value": "http://s3.localhost.localstack.cloud:4566"
+                          },
+                          {
+                            "name": "BUCKET_NAME",
+                            "value": "my-bucket"
+                          }
+                        ]
+                      }
+                    ],
+                    "cpu": "256",
+                    "family": "LocalStackMyS3BucketServiceFargateTask7D136E95",
+                    "memory": "512",
+                    "networkMode": "awsvpc",
+                    "requiresCompatibilities": [
+                      "FARGATE"
+                    ],
+                    "taskRoleArn": {
+                      "Fn::GetAtt": [
+                        "MyS3BucketServiceFargateTaskTaskRole92BF9678",
+                        "Arn"
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.CfnTaskDefinition",
+                  "version": "2.14.0"
+                }
+              },
+              "MyS3BucketServiceFargateContainer": {
+                "id": "MyS3BucketServiceFargateContainer",
+                "path": "LocalStack/MyS3BucketServiceFargateTask/MyS3BucketServiceFargateContainer",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.ContainerDefinition",
+                  "version": "2.14.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ecs.FargateTaskDefinition",
+              "version": "2.14.0"
+            }
+          },
+          "MyS3BucketService": {
+            "id": "MyS3BucketService",
+            "path": "LocalStack/MyS3BucketService",
+            "children": {
+              "Service": {
+                "id": "Service",
+                "path": "LocalStack/MyS3BucketService/Service",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ECS::Service",
+                  "aws:cdk:cloudformation:props": {
+                    "cluster": {
+                      "Ref": "MyCluster4C1BA579"
+                    },
+                    "deploymentConfiguration": {
+                      "maximumPercent": 200,
+                      "minimumHealthyPercent": 50
+                    },
+                    "enableEcsManagedTags": false,
+                    "launchType": "FARGATE",
+                    "networkConfiguration": {
+                      "awsvpcConfiguration": {
+                        "assignPublicIp": "DISABLED",
+                        "subnets": [
+                          {
+                            "Ref": "MyVpcPrivateSubnet1Subnet5057CF7E"
+                          },
+                          {
+                            "Ref": "MyVpcPrivateSubnet2Subnet0040C983"
+                          }
+                        ],
+                        "securityGroups": [
+                          {
+                            "Fn::GetAtt": [
+                              "MyS3BucketServiceSecurityGroup0B32EECE",
+                              "GroupId"
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "taskDefinition": {
+                      "Ref": "MyS3BucketServiceFargateTask91F77164"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.CfnService",
+                  "version": "2.14.0"
+                }
+              },
+              "SecurityGroup": {
+                "id": "SecurityGroup",
+                "path": "LocalStack/MyS3BucketService/SecurityGroup",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "LocalStack/MyS3BucketService/SecurityGroup/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                      "aws:cdk:cloudformation:props": {
+                        "groupDescription": "LocalStack/MyS3BucketService/SecurityGroup",
+                        "securityGroupEgress": [
+                          {
+                            "cidrIp": "0.0.0.0/0",
+                            "description": "Allow all outbound traffic by default",
+                            "ipProtocol": "-1"
+                          }
+                        ],
+                        "vpcId": {
+                          "Ref": "MyVpcF9F0CA6F"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroup",
+                      "version": "2.14.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.SecurityGroup",
+                  "version": "2.14.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ecs.FargateService",
+              "version": "2.14.0"
+            }
           }
         },
         "constructInfo": {
